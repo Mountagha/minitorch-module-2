@@ -99,7 +99,7 @@ def inv(x: float) -> float:
 
 def inv_back(x: float, d: float) -> float:
     r"If $f(x) = 1/x$ compute $d \times f'(x)$"
-    return -(1.0 / x**2) * d
+    return -(1.0 / x ** 2) * d
 
 
 def relu_back(x: float, d: float) -> float:
@@ -184,7 +184,7 @@ def reduce(
     def accumulate(ls: Iterable[float]) -> float:
         acc = start
         for elt in ls:
-            acc += elt
+            acc = fn(acc, elt)
         return acc
 
     return accumulate
