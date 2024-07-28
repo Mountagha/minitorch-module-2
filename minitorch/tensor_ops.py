@@ -268,9 +268,21 @@ def tensor_map(fn: Callable[[float], float]) -> Any:
         in_shape: Shape,
         in_strides: Strides,
     ) -> None:
-        # TODO: Implement for Task 2.3.
-        raise NotImplementedError("Need to implement for Task 2.3")
-
+        if out_strides == in_strides:
+            for i in len(in_storage):
+                out[i] = fn(in_storage[i])
+        else:
+            # find the size of the tensor.
+            size = np.prod(in_shape)
+            for i in range(size):
+                # find both indexes for the in and the out.
+                in_index = np.zeros_like(in_shape, dtype=np.int32)
+                out_index = np.zeros_like(out_shape, dtype=np.int32)
+                to_index(i, out_shape, out_index)
+                broadcast_index(out_index, out_shape, in_shape, in_index)
+                j = index_to_position(in_index, in_strides)
+                k = index_to_position(out_index, out_strides)
+                out[k] = fn(in_storage[j])
     return _map
 
 
@@ -318,9 +330,25 @@ def tensor_zip(fn: Callable[[float, float], float]) -> Any:
         b_shape: Shape,
         b_strides: Strides,
     ) -> None:
-        # TODO: Implement for Task 2.3.
-        raise NotImplementedError("Need to implement for Task 2.3")
-
+        a_size = np.prod(a_shape, dtype=np.int32)
+        b_size = np.prod(b_shape, dtype=np.int32)
+        out_size = np.prod(out_shape, dtype=np.int32)
+        assert(a_size == b_size, "the two inputs tensors must have the same size.")
+        if out_shape == a_shape and a_shape == b_shape:
+            for i in a_size:
+                out[i] = fn(a_storage[i], b_storage[i])
+        else:
+            for i in out_size:
+                a_index = np.zeros_like(a_shape, dtype=np.int32)
+                b_index = np.zeros_like(b_shape, dtype=np.int32)
+                out_index = np.zeros_like(out_shape, dtype=np.int32)
+                to_index(i, out_shape, out_index)
+                broadcast_index(out_index, out_shape, a_shape, a_index)
+                broadcast_index(out_index, out_shape, b_shape, b_index)
+                o = index_to_position(out_index, out_strides)
+                a = index_to_position(a_index, a_strides)
+                b = index_to_position(b_index, b_strides)
+                out[o] = fn(a_storage[a], b_storage[b])
     return _zip
 
 
