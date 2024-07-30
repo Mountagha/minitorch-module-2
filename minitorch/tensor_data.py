@@ -116,7 +116,7 @@ def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
         elif x1 == 1 or x2 == 1:
             final_shape.append(max(x1, x2))
         else:
-            raise IndexingError() 
+            raise IndexingError()
     # add the remaining dimension from the bigger shape
     remaining = abs(len(shape1) - len(shape2))
     if remaining > 0:

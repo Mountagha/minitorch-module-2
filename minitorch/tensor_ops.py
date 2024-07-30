@@ -268,8 +268,8 @@ def tensor_map(fn: Callable[[float], float]) -> Any:
         in_shape: Shape,
         in_strides: Strides,
     ) -> None:
-        if out_strides == in_strides:
-            for i in len(in_storage):
+        if np.all(out_strides == in_strides):
+            for i in range(len(in_storage)):
                 out[i] = fn(in_storage[i])
         else:
             # find the size of the tensor.
@@ -283,6 +283,7 @@ def tensor_map(fn: Callable[[float], float]) -> Any:
                 j = index_to_position(in_index, in_strides)
                 k = index_to_position(out_index, out_strides)
                 out[k] = fn(in_storage[j])
+
     return _map
 
 
@@ -331,14 +332,12 @@ def tensor_zip(fn: Callable[[float, float], float]) -> Any:
         b_strides: Strides,
     ) -> None:
         a_size = np.prod(a_shape, dtype=np.int32)
-        b_size = np.prod(b_shape, dtype=np.int32)
         out_size = np.prod(out_shape, dtype=np.int32)
-        assert(a_size == b_size, "the two inputs tensors must have the same size.")
-        if out_shape == a_shape and a_shape == b_shape:
-            for i in a_size:
+        if np.all(out_shape == a_shape) and np.all(a_shape == b_shape):
+            for i in range(a_size):
                 out[i] = fn(a_storage[i], b_storage[i])
         else:
-            for i in out_size:
+            for i in range(out_size):
                 a_index = np.zeros_like(a_shape, dtype=np.int32)
                 b_index = np.zeros_like(b_shape, dtype=np.int32)
                 out_index = np.zeros_like(out_shape, dtype=np.int32)
@@ -349,6 +348,7 @@ def tensor_zip(fn: Callable[[float, float], float]) -> Any:
                 a = index_to_position(a_index, a_strides)
                 b = index_to_position(b_index, b_strides)
                 out[o] = fn(a_storage[a], b_storage[b])
+
     return _zip
 
 
@@ -382,8 +382,23 @@ def tensor_reduce(fn: Callable[[float, float], float]) -> Any:
         a_strides: Strides,
         reduce_dim: int,
     ) -> None:
-        # TODO: Implement for Task 2.3.
-        raise NotImplementedError("Need to implement for Task 2.3")
+        out_index = np.zeros_like(out_shape, dtype=np.int32)
+        a_index = np.zeros_like(a_shape, dtype=np.int32)
+        reduce_shape = a_shape
+        reduce_shape[reduce_dim] = 1
+        reduce_size = int(np.prod(reduce_shape))
+        out_size = int(np.prod(out_shape))
+        for i in range(out_size):
+            to_index(i, out_shape, out_index)
+            o = index_to_position(out_index, out_strides)
+
+            for j in range(reduce_size):
+                to_index(j, reduce_shape, a_index)
+                for k in range(len(reduce_shape)):
+                    if reduce_shape[k] != 1:
+                        out_index[k] = a_index[k]
+                l = index_to_position(out_index, a_strides)
+                out[o] = fn(out[o], a_storage[l])
 
     return _reduce
 

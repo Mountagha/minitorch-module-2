@@ -11,9 +11,9 @@
             "program": "/home/mountagha/anaconda3/envs/minitorch/bin/pytest",
             "console": "integratedTerminal",
             "args": [
-                "${workspaceFolder}/tests/test_tensor_data.py",
+                "${workspaceFolder}/tests/test_tensor.py",
                 "-k",
-                "test_layout"
+                "test_one_derivative"
             ]
         }
     ]
