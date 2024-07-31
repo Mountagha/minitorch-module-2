@@ -71,9 +71,9 @@ def topological_sort(variable: Variable) -> List[Variable]:
     def _build_topological(v: Variable) -> None:
         if v not in visited:
             visited.add(v)
-            for e in v.parents:
-                _build_topological(e)
             if not v.is_constant():
+                for e in v.parents:
+                    _build_topological(e)
                 variables.append(v)
 
     _build_topological(variable)
