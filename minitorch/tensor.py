@@ -136,7 +136,8 @@ class Tensor:
 
     def _ensure_tensor(self, b: TensorLike) -> Tensor:
         "Turns a python number into a tensor with the same backend."
-        if isinstance(b, (int, float)):
+        # numpy converts the int values in tensor shape into np.int64 when constructing tensor.
+        if isinstance(b, (int, float, np.int32, np.int64)):
             c = Tensor.make([b], (1,), backend=self.backend)
         else:
             b._type_(self.backend)
