@@ -150,6 +150,7 @@ class Log(Function):
         (t1,) = ctx.saved_values
         return t1.f.log_back_zip(t1, grad_output)
 
+
 class Exp(Function):
     @staticmethod
     def forward(ctx: Context, t1: Tensor) -> Tensor:
@@ -160,6 +161,7 @@ class Exp(Function):
     def backward(ctx: Context, grad_output: Tensor) -> Tensor:
         (t1,) = ctx.saved_values
         return t1.f.mul_zip(grad_output, t1.f.exp_map(t1))
+
 
 class Sum(Function):
     @staticmethod
@@ -192,6 +194,7 @@ class LT(Function):
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, Tensor]:
         (a_shape, b_shape) = ctx.saved_values
         return zeros(a_shape), zeros(b_shape)
+
 
 class EQ(Function):
     @staticmethod
