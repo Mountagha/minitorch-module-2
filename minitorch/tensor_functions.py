@@ -218,7 +218,7 @@ class Permute(Function):
     @staticmethod
     def forward(ctx: Context, a: Tensor, order: Tensor) -> Tensor:
         ctx.save_for_backward(a.shape, order)
-        return a.permute(order)
+        return a.permute(*order)
 
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, float]:
