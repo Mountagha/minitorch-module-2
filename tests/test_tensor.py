@@ -57,7 +57,6 @@ def test_one_derivative(
     name, _, tensor_fn = fn
     grad_check(tensor_fn, t1)
 
-
 @given(data(), tensors())
 @pytest.mark.task2_4
 def test_permute(data: DataObject, t1: Tensor) -> None:
@@ -66,7 +65,6 @@ def test_permute(data: DataObject, t1: Tensor) -> None:
 
     def permute(a: Tensor) -> Tensor:
         return a.permute(*permutation)
-
     grad_check(permute, t1)
 
 

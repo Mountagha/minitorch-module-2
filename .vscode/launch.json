@@ -13,7 +13,7 @@
             "args": [
                 "${workspaceFolder}/tests/test_tensor.py",
                 "-k",
-                "test_two_grad_broadcast"
+                "test_permute"
             ]
         }
     ]
