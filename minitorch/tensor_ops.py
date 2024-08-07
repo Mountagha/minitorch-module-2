@@ -268,13 +268,7 @@ def tensor_map(fn: Callable[[float], float]) -> Any:
         in_shape: Shape,
         in_strides: Strides,
     ) -> None:
-        # if np.all(out_strides == in_strides):
-        #    for i in range(len(in_storage)):
-        #        out[i] = fn(in_storage[i])
-        #else:
-            # find the size of the tensor.
-        size = np.prod(in_shape)
-        for i in range(size):
+        for i in range(int(np.prod(out_shape))):
             # find both indexes for the in and the out.
             in_index = np.zeros_like(in_shape, dtype=np.int32)
             out_index = np.zeros_like(out_shape, dtype=np.int32)
@@ -331,13 +325,7 @@ def tensor_zip(fn: Callable[[float, float], float]) -> Any:
         b_shape: Shape,
         b_strides: Strides,
     ) -> None:
-        a_size = np.prod(a_shape, dtype=np.int32)
-        out_size = np.prod(out_shape, dtype=np.int32)
-        # if np.all(out_shape == a_shape) and np.all(a_shape == b_shape):
-        #    for i in range(a_size):
-        #        out[i] = fn(a_storage[i], b_storage[i])
-        # else:
-        for i in range(out_size):
+        for i in range(int(np.prod(out_shape))):
             a_index = np.zeros_like(a_shape, dtype=np.int32)
             b_index = np.zeros_like(b_shape, dtype=np.int32)
             out_index = np.zeros_like(out_shape, dtype=np.int32)
