@@ -13,7 +13,7 @@
             "args": [
                 "${workspaceFolder}/tests/test_tensor.py",
                 "-k",
-                "test_permute"
+                "test_one_derivative"
             ]
         }
     ]

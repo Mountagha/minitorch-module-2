@@ -384,9 +384,9 @@ def tensor_reduce(fn: Callable[[float, float], float]) -> Any:
     ) -> None:
         out_index = np.zeros_like(out_shape, dtype=np.int32)
         a_index = np.zeros_like(a_shape, dtype=np.int32)
-        reduce_shape = a_shape
-        reduce_shape[reduce_dim] = 1
-        reduce_size = int(np.prod(reduce_shape))
+        reduce_shape = np.ones_like(a_shape, dtype=np.int32)
+        reduce_shape[reduce_dim] = a_shape[reduce_dim]
+        reduce_size = int(a_shape[reduce_dim]) 
         out_size = int(np.prod(out_shape))
         for i in range(out_size):
             to_index(i, out_shape, out_index)
@@ -399,7 +399,6 @@ def tensor_reduce(fn: Callable[[float, float], float]) -> Any:
                         out_index[k] = a_index[k]
                 l = index_to_position(out_index, a_strides)
                 out[o] = fn(out[o], a_storage[l])
-
     return _reduce
 
 
