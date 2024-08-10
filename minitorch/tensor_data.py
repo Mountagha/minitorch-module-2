@@ -240,8 +240,8 @@ class TensorData:
         assert list(sorted(order)) == list(
             range(len(self.shape))
         ), f"Must give a position to each dimension. Shape: {self.shape} Order: {order}"
-        shape = tuple([self._shape[i] for i in order])
-        strides = tuple([self._strides[i] for i in order])
+        shape = tuple([self.shape[i] for i in order])
+        strides = tuple([self.strides[i] for i in order])
         return TensorData(self._storage, shape, strides)
 
     def to_string(self) -> str:

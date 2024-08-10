@@ -226,8 +226,13 @@ class Permute(Function):
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, float]:
         (list_order, ) = ctx.saved_values
+        inverse_order = [0] * len(list_order)
+        for i, o in enumerate(list_order):
+            inverse_order[o] = i
+
         return grad_output._new(
-            grad_output._tensor.permute(*list_order)), 0.0
+            grad_output._tensor.permute(*inverse_order)
+        ), 0.0
 
 
 class View(Function):
