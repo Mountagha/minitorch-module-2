@@ -4,6 +4,16 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
+        {
+            "name": "Python Debugger: Training model with tensors",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/project/run_tensor.py",
+            "pythonPath": "/home/mountagha/anaconda3/envs/minitorch/bin/python",
+            "console": "integratedTerminal",
+        },
+        /*
         {
             "name": "Python Debugger: Debugging tensors Module-2",
             "type": "debugpy",
@@ -16,5 +26,6 @@
                 "test_permute"
             ]
         }
+        */
     ]
 }
