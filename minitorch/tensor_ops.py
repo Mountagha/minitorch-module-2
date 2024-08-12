@@ -6,7 +6,7 @@ import numpy as np
 from typing_extensions import Protocol
 
 from . import operators
-from .tensor_data import (
+from .tensor_data import (  # noqa: F401
     MAX_DIMS,
     broadcast_index,
     index_to_position,
@@ -26,19 +26,19 @@ class MapProto(Protocol):
 
 class TensorOps:
     @staticmethod
-    def map(fn: Callable[[float], float]) -> MapProto:
+    def map(fn: Callable[[float], float]) -> MapProto:  # type: ignore
         pass
 
     @staticmethod
-    def cmap(fn: Callable[[float], float]) -> Callable[[Tensor, Tensor], Tensor]:
+    def cmap(fn: Callable[[float], float]) -> Callable[[Tensor, Tensor], Tensor]:  # type: ignore
         pass
 
     @staticmethod
-    def zip(fn: Callable[[float, float], float]) -> Callable[[Tensor, Tensor], Tensor]:
+    def zip(fn: Callable[[float, float], float]) -> Callable[[Tensor, Tensor], Tensor]:  # type: ignore
         pass
 
     @staticmethod
-    def reduce(
+    def reduce(  # type: ignore
         fn: Callable[[float, float], float], start: float = 0.0
     ) -> Callable[[Tensor, int], Tensor]:
         pass
@@ -270,8 +270,8 @@ def tensor_map(fn: Callable[[float], float]) -> Any:
     ) -> None:
         for i in range(int(np.prod(out_shape))):
             # find both indexes for the in and the out.
-            in_index = np.zeros_like(in_shape, dtype=np.int32)
-            out_index = np.zeros_like(out_shape, dtype=np.int32)
+            in_index: Index = np.zeros_like(in_shape, dtype=np.int32)
+            out_index: Index = np.zeros_like(out_shape, dtype=np.int32)
             to_index(i, out_shape, out_index)
             broadcast_index(out_index, out_shape, in_shape, in_index)
             j = index_to_position(in_index, in_strides)
@@ -326,8 +326,8 @@ def tensor_zip(fn: Callable[[float, float], float]) -> Any:
         b_strides: Strides,
     ) -> None:
         for i in range(int(np.prod(out_shape))):
-            a_index = np.zeros_like(a_shape, dtype=np.int32)
-            b_index = np.zeros_like(b_shape, dtype=np.int32)
+            a_index: Index = np.zeros_like(a_shape, dtype=np.int32)
+            b_index: Index = np.zeros_like(b_shape, dtype=np.int32)
             out_index = np.zeros_like(out_shape, dtype=np.int32)
             to_index(i, out_shape, out_index)
             broadcast_index(out_index, out_shape, a_shape, a_index)
@@ -370,11 +370,11 @@ def tensor_reduce(fn: Callable[[float, float], float]) -> Any:
         a_strides: Strides,
         reduce_dim: int,
     ) -> None:
-        out_index = np.zeros_like(out_shape, dtype=np.int32)
-        a_index = np.zeros_like(a_shape, dtype=np.int32)
+        out_index: Index = np.zeros_like(out_shape, dtype=np.int32)
+        a_index: Index = np.zeros_like(a_shape, dtype=np.int32)
         reduce_shape = np.ones_like(a_shape, dtype=np.int32)
         reduce_shape[reduce_dim] = a_shape[reduce_dim]
-        reduce_size = int(a_shape[reduce_dim]) 
+        reduce_size = int(a_shape[reduce_dim])
         out_size = int(np.prod(out_shape))
         for i in range(out_size):
             to_index(i, out_shape, out_index)
@@ -387,6 +387,7 @@ def tensor_reduce(fn: Callable[[float, float], float]) -> Any:
                         out_index[k] = a_index[k]
                 l = index_to_position(out_index, a_strides)
                 out[o] = fn(out[o], a_storage[l])
+
     return _reduce
 
 

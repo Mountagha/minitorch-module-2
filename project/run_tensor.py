@@ -25,6 +25,7 @@ class Network(minitorch.Module):
         x2 = self.layer2.forward(x1).relu()
         return self.layer3.forward(x2).sigmoid()
 
+
 class Linear(minitorch.Module):
     def __init__(self, in_size, out_size):
         super().__init__()
@@ -35,10 +36,10 @@ class Linear(minitorch.Module):
     def forward(self, x):
         """
         Explanation for my future self.
-        To forward x since we doesn't implement matrix multiplication yet 
+        To forward x since we doesn't implement matrix multiplication yet
         we will need to do some Gimmicks with shape/dimension.
         1- We know that the last dim of x would correspond to the first dim
-        of weights. 
+        of weights.
         x = (a, b, c,....d)
         b =          (d, e)
         We want the d dimension to be aligned so that we can broadcasting the shapes
@@ -63,6 +64,7 @@ class Linear(minitorch.Module):
 
         # Reshape by removing the second to last dimension.
         x = x.view(*(x.shape[:-2] + x.shape[-1:]))
+        # x = x.view(*(x.shape[:len(x.shape) - 2] + x.shape[len(x.shape) - 1:]))
 
         # add the bias
         x = x + self.bias.value

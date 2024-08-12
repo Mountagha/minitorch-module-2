@@ -124,7 +124,8 @@ class Sigmoid(Function):
             tensor_.shape,
             backend=tensor_.backend,
         )
-        return sigmoid_ * (ones - sigmoid_) * grad_output
+        res: Tensor = sigmoid_ * (ones - sigmoid_) * grad_output
+        return res  # to satisty mypy type checker.
 
 
 class ReLU(Function):
@@ -135,8 +136,9 @@ class ReLU(Function):
 
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tensor:
-        (t1, ) = ctx.saved_values
-        return t1.f.relu_back_zip(t1, grad_output)
+        (t1,) = ctx.saved_values
+        res: Tensor = t1.f.relu_back_zip(t1, grad_output)
+        return res
 
 
 class Log(Function):
@@ -148,7 +150,8 @@ class Log(Function):
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tensor:
         (t1,) = ctx.saved_values
-        return t1.f.log_back_zip(t1, grad_output)
+        res: Tensor = t1.f.log_back_zip(t1, grad_output)
+        return res
 
 
 class Exp(Function):
@@ -160,7 +163,8 @@ class Exp(Function):
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tensor:
         (t1,) = ctx.saved_values
-        return t1.f.mul_zip(grad_output, t1.f.exp_map(t1))
+        res: Tensor = t1.f.mul_zip(grad_output, t1.f.exp_map(t1))
+        return res
 
 
 class Sum(Function):
@@ -219,20 +223,16 @@ class Permute(Function):
     def forward(ctx: Context, a: Tensor, order: Tensor) -> Tensor:
         list_order = order.to_numpy().astype(int).tolist()
         ctx.save_for_backward(list_order)
-        return a._new(
-            a._tensor.permute(*list_order)
-        )
+        return a._new(a._tensor.permute(*list_order))
 
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, float]:
-        (list_order, ) = ctx.saved_values
+        (list_order,) = ctx.saved_values
         inverse_order = [0] * len(list_order)
         for i, o in enumerate(list_order):
             inverse_order[o] = i
 
-        return grad_output._new(
-            grad_output._tensor.permute(*inverse_order)
-        ), 0.0
+        return grad_output._new(grad_output._tensor.permute(*inverse_order)), 0.0
 
 
 class View(Function):

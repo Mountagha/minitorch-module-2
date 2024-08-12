@@ -108,7 +108,7 @@ def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
     Raises:
         IndexingError : if cannot broadcast
     """
-    final_shape: UserShape = []
+    final_shape = []
     bigger_shape = shape1 if len(shape1) > len(shape2) else shape2
     for x1, x2 in zip(shape1[::-1], shape2[::-1]):
         if x1 == x2:
